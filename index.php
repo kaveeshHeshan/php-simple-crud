@@ -2,6 +2,20 @@
 require('config/config.php');
 require('config/db.php');
 
+if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == 'POST') {
+
+    $postId = mysqli_real_escape_string($connection, $_POST['post_id']);
+
+    $delete_post_query = "DELETE FROM posts WHERE id = {$postId}";
+
+    if(mysqli_query($connection, $delete_post_query)) {
+        // success redirect
+        header('Location: ' .ROOT_URL.'');
+    } else {
+        echo 'ERROR: '. mysqli_error($connection);
+    }
+}
+
 $AllPostsQuery = 'SELECT * FROM posts ORDER BY created_at DESC';
 
 // Get Result
@@ -29,6 +43,10 @@ mysqli_close($connection);
 
     <!-- Styles -->
     <!-- <link rel="stylesheet" href="./public/css/bootstrap.min.css"> -->
+
+    <!-- Box Icons Styles -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
@@ -42,7 +60,7 @@ mysqli_close($connection);
                 </div>
                 <div class="mt-8">
                     <a href="addPost.php" class="justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                        Add Post
+                    <i class='bx bx-plus'></i> &nbsp; Add Post
                     </a>
                 </div>
                 <div class="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 border-t border-gray-200 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
@@ -85,8 +103,19 @@ mysqli_close($connection);
                         <div class="pt-4 pb-4">
                             <a class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" 
                                 href="<?php echo ROOT_URL; ?>show.php?id=<?php echo $post['id']; ?>">
-                                View More
+                                Read More
                             </a>
+
+                            <a class="inline-flex w-full justify-center rounded-md border border-transparent bg-yellow-400 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" 
+                                href="<?php echo ROOT_URL; ?>edit.php?id=<?php echo $post['id']; ?>">
+                                <i class='bx bx-edit'></i>
+                            </a>
+
+                            <form action="<?php $_SERVER['PHP_SELF']; ?>" method="POST">
+                                <input type="hidden" name="post_id" value="<?php echo $post['id'] ?>">
+                                <button class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" type="submit"><i class='bx bx-trash'></i></button>
+                            </form>
+                            
                         </div>
                     </article>
                 <?php endforeach; ?>
