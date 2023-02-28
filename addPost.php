@@ -2,6 +2,21 @@
 require('config/config.php');
 require('config/db.php');
 
+    if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == 'POST') {
+        $title = mysqli_real_escape_string($connection, $_POST['title']);
+        $body = mysqli_real_escape_string($connection, $_POST['body']);
+        $author = mysqli_real_escape_string($connection, $_POST['author']);
+
+        $add_post_query = "INSERT INTO posts(title, body, author) VALUES('$title', '$body', '$author')";
+
+        if(mysqli_query($connection, $add_post_query)) {
+            // success redirect
+            header('Location: ' .ROOT_URL.'');
+        } else {
+            echo 'ERROR: '. mysqli_error($connection);
+        }
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -36,22 +51,29 @@ require('config/db.php');
                 <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Add Post</h2>
                 </div>
                 <div class="mx-auto gridborder-t border-gray-200 pt-10">
-                    <form id="postForm" action="#" method="POST">
+                    <form id="postForm" method="POST" action="<?php $_SERVER['PHP_SELF']; ?>">
                         <div class="shadow-lg sm:overflow-hidden sm:rounded-md">
                         <div class="space-y-6 bg-white px-4 py-5 sm:p-6">
                             <div class="col-span-3 sm:col-span-2">
                                 <label for="company-website" class="block text-sm font-medium text-gray-700">Title</label>
                                 <div class="mt-1">
-                                    <input class="text-input" type="text" name="company-website" id="company-website" class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="www.example.com">
+                                    <input class="text-input" type="text" name="title" id="post-title" class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Title">
                                 </div>
                             </div>
 
                             <div>
-                            <label for="about" class="block text-sm font-medium text-gray-700">Body</label>
-                            <div class="mt-1">
-                                <textarea class="text-area-input" id="about" name="about" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="you@example.com"></textarea>
+                                <label for="about" class="block text-sm font-medium text-gray-700">Body</label>
+                                <div class="mt-1">
+                                    <textarea class="text-area-input" id="post-body" name="body" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Body"></textarea>
+                                </div>
+                                <p class="mt-2 text-sm text-gray-500">Brief description for your Post.</p>
                             </div>
-                            <p class="mt-2 text-sm text-gray-500">Brief description for your Post.</p>
+                            
+                            <div class="col-span-3 sm:col-span-2">
+                                <label for="company-website" class="block text-sm font-medium text-gray-700">Author</label>
+                                <div class="mt-1">
+                                    <input class="text-input" type="text" name="author" id="post-author" class="block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Author">
+                                </div>
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">

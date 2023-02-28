@@ -2,7 +2,7 @@
 require('config/config.php');
 require('config/db.php');
 
-$AllPostsQuery = 'SELECT * FROM posts';
+$AllPostsQuery = 'SELECT * FROM posts ORDER BY created_at DESC';
 
 // Get Result
 $result = mysqli_query($connection, $AllPostsQuery);
