@@ -1,0 +1,21 @@
+#postForm .text-input {
+    height: 40px !important;
+    width: 100%;
+    padding: 10px;
+    border: solid 2px #cbd5e1;
+    border-radius: 10px;
+}
+
+#postForm .text-area-input {
+    height: 100px !important;
+    width: 100%;
+    padding: 10px;
+    border: solid 2px #cbd5e1;
+    border-radius: 10px;
+}
+
+#postForm .text-input:focus,
+#postForm .text-area-input:focus {
+    border: solid 2px #6366f1 !important;
+
+}
